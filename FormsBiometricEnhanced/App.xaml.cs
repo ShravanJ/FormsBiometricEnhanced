@@ -2,6 +2,12 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+/*
+ * FormsBiometricEnhanced - https://github.com/ShravanJ/FormsBiometricEnhanced
+ * Author: Shravan Jambukesan <shravan.j97@gmail.com>
+ * Date: 4/11/19
+ */
+
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace FormsBiometricEnhanced
 {

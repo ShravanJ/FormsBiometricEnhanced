@@ -9,6 +9,12 @@ using Plugin.Settings;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
+/*
+ * FormsBiometricEnhanced - https://github.com/ShravanJ/FormsBiometricEnhanced
+ * Author: Shravan Jambukesan <shravan.j97@gmail.com>
+ * Date: 4/11/19
+ */
+
 namespace FormsBiometricEnhanced
 {
     public partial class MainPage : ContentPage
@@ -17,6 +23,10 @@ namespace FormsBiometricEnhanced
         private string username;
         private string password;
 
+        /*
+         * Plugin.Settings allows us to save the state of the biometric toggle to tell us whether or not to use
+         * biomeric login the next time the user launces the app        
+         */
         private static ISettings AppSettings => CrossSettings.Current;
 
         public static bool BiometricToggle
@@ -31,6 +41,9 @@ namespace FormsBiometricEnhanced
             SetupBiometricUI();
         }
 
+        /*
+         * Setup the UI depending on whether or not we enabled biometric auth before
+         */
         async void SetupBiometricUI()
         {
             if(!string.IsNullOrEmpty(await GetUsernameFromSecureStorage()) && !string.IsNullOrEmpty(await GetPasswordFromSecureStorage()))
@@ -44,6 +57,9 @@ namespace FormsBiometricEnhanced
             }
         }
 
+        /*
+         * Login button click event, based on biometric switch toggle use traditional or biometric authentication
+         */
         async void LoginButton_Clicked(object sender, System.EventArgs e)
         {
             if (!biometricSwitch.IsToggled)
@@ -58,6 +74,9 @@ namespace FormsBiometricEnhanced
             }
         }
 
+        /*
+         * Clear all SecureStorage keys for this app, useful for debugging
+         */
         void ClearCredentialsButton_Clicked(object sender, System.EventArgs e)
         {
             SecureStorage.RemoveAll();
@@ -67,17 +86,33 @@ namespace FormsBiometricEnhanced
             passwordEntry.Text = "";
         }
 
+        /*
+         * Use Plugin.Fingerprint to authenticate using local device biometrics such as Face ID or Touch ID
+         */
         public async void BiometricLogin()
         {
+            // Message for local authentication promot
             var result = await CrossFingerprint.Current.AuthenticateAsync("Login using Biometrics");
             if (result.Authenticated)
             {
+                // Save the username and password each time to it's always up-to-date
                 SaveCredentials(usernameEntry.Text, passwordEntry.Text);
+                // Set the toggle to on so Plugin.Settings loads it next time we run the app
                 BiometricToggle = true;
+                // Successful login!
                 await DisplayAlert("Login", "Logged in as " + usernameEntry.Text + " successfully", "OK");
             }
         }
 
+        /*
+         * Credentials are saved using Xamarin.Essential's SecureStorage class (Xamarin.Auth's AccountStore is now deprecated)
+         * Saving credentials is as easy as creating a name for the keys ("FormsBiometricEnhanced_username") and assigning a value
+         * (username passed in from the text entry). Entries are written asynchronously. 
+         * 
+         * NOTE for iOS: You'll need to enable Keychain Sharing in your Entitlements file to run inside of the iOS Simulator (this has
+         * already been done for you in this project)
+         * More info here: https://docs.microsoft.com/en-us/xamarin/essentials/secure-storage?tabs=ios        
+         */
         public async void SaveCredentials(string username, string password)
         {
             try
@@ -91,6 +126,10 @@ namespace FormsBiometricEnhanced
             }
         }
 
+        /*
+         * Since SecureStorage uses async functions we need to use a Task that returns a string to
+         * grab the username from SecureStorage        
+         */
         private async Task<string> GetUsernameFromSecureStorage()
         {
             string username = "";
@@ -105,6 +144,10 @@ namespace FormsBiometricEnhanced
             return username;
         }
 
+        /*
+        * Since SecureStorage uses async functions we need to use a Task that returns a string to
+        * grab the password from SecureStorage        
+        */
         private async Task<string> GetPasswordFromSecureStorage()
         {
             string password = "";

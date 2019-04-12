@@ -7,7 +7,6 @@ using Plugin.CurrentActivity;
 
 namespace FormsBiometricEnhanced.Droid
 {
-    //You can specify additional application information in this attribute
     [Application]
     public class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
@@ -20,7 +19,6 @@ namespace FormsBiometricEnhanced.Droid
         {
             base.OnCreate();
             RegisterActivityLifecycleCallbacks(this);
-            //A great place to initialize Xamarin.Insights and Dependency Services!
         }
 
         public override void OnTerminate()
@@ -36,10 +34,12 @@ namespace FormsBiometricEnhanced.Droid
 
         public void OnActivityDestroyed(Activity activity)
         {
+
         }
 
         public void OnActivityPaused(Activity activity)
         {
+
         }
 
         public void OnActivityResumed(Activity activity)
@@ -49,6 +49,7 @@ namespace FormsBiometricEnhanced.Droid
 
         public void OnActivitySaveInstanceState(Activity activity, Bundle outState)
         {
+
         }
 
         public void OnActivityStarted(Activity activity)
@@ -58,6 +59,7 @@ namespace FormsBiometricEnhanced.Droid
 
         public void OnActivityStopped(Activity activity)
         {
+
         }
     }
 }
